@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .models import Course, Enrollment, Question, Choice, Submission
+from .models import Course, Enrollment, Question, Choice, Submission, Lesson
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -144,13 +144,14 @@ def show_exam_result(request, course_id, submission_id):
     selected_ids = []
     achieved_points = 0
     total_points = 3
+    lesson = Lesson.objects.get(course=course)
 
     for choice in submission.chocies.all():
         if choice.is_correct:
             selected_ids.append(choice.id)
             achieved_points += choice.question.grade
 
-    return  render(request, 'onlinecourse/exam_result_bootstrap.html', {"course": course, "selected_ids":selected_ids, "achieved_points": achieved_points, "total_points":total_points, "grade":achieved_points/total_points})
+    return  render(request, 'onlinecourse/exam_result_bootstrap.html', {"course": course, "selected_ids":selected_ids, "achieved_points": achieved_points, "total_points":total_points, "grade":achieved_points/total_points, "lesson":lesson})
 
 
 
